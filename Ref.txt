@@ -1,0 +1,7 @@
+Setting Up A Parse Server As An Alternative Backend
+https://blog.jscrambler.com/setting-up-a-parse-server-as-an-alternative-backend
+
+npm install -g parse-server mongodb-runner
+mongodb-runner start
+parse-server --appId appId --masterKey masterKey --databaseURI mongodb://localhost/test --publicServerURL http://localhost:1337/parse
+

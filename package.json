@@ -1,0 +1,29 @@
+{
+  "name": "my-parse-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Developed by Mikdan Tech Solutions",
+  "author": "Mikdan Tech Solutions",
+  "copyright": "Copyright 2022 Mikdan Tech Solutions",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "client": "node client.js"
+  },
+  "keywords": [
+    "node",
+    "restful",
+    "api"
+  ],
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "parse-dashboard": "^5.0.0",
+    "parse-server": "^6.0.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.22"
+  }
+}
