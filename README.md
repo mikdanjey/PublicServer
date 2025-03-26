@@ -1,10 +1,9 @@
 # My Parse Server
 
-* `yarn install`
-* `cp .env.sample-dev .env`
-* `yarn start`
-* `yarn now`
-
+- `yarn install`
+- `cp .env.sample-dev .env`
+- `yarn start`
+- `yarn now`
 
 sudo npm install -g npm-check-updates
 
