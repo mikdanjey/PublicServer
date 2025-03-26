@@ -41,7 +41,6 @@ const apiParse = new ParseServer({
   allowExpiredAuthDataToken: false,
   encodeParseObjectInCloudFunction: true, // Future-proof
   enableInsecureAuthAdapters: false, // Future-proof
-  pages: { enableRouter: false },
   logLevel: "info",
   silent: false,
 });
