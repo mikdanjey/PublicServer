@@ -31,18 +31,13 @@ app.use(cors(corsOptionsDelegate));
 // local variables
 const NODE_ENV = process.env.NODE_ENV || "development";
 const PORT = process.env.NODE_PORT || 1337;
-const serverURL =
-  process.env.PARSE_SERVER_URL || `http://localhost:${PORT}/parse`;
-const databaseURI =
-  process.env.PARSE_SERVER_DATABASE_URI ||
-  "mongodb://localhost:27017/parseServer?retryWrites=true&w=majority";
-const CLOUD_CODE_MAIN =
-  process.env.PARSE_SERVER_CLOUD || path.join(__dirname, "cloud", "main.js");
+const serverURL = process.env.PARSE_SERVER_URL || `http://localhost:${PORT}/parse`;
+const databaseURI = process.env.PARSE_SERVER_DATABASE_URI || "mongodb://localhost:27017/parseServer?retryWrites=true&w=majority";
+const CLOUD_CODE_MAIN = process.env.PARSE_SERVER_CLOUD || path.join(__dirname, "cloud", "main.js");
 // Info
 const production = process.env.PARSE_SERVER_PRODUCTION || false;
 const appId = process.env.PARSE_SERVER_APPLICATION_ID || "myAppId";
-const javascriptKey =
-  process.env.PARSE_SERVER_JAVASCRIPT_KEY || "myJavascriptKey";
+const javascriptKey = process.env.PARSE_SERVER_JAVASCRIPT_KEY || "myJavascriptKey";
 const user = process.env.PARSE_SERVER_USER || "myUser";
 const password = process.env.PARSE_SERVER_PASSWORD || "myPassword";
 const appName = process.env.PARSE_SERVER_APP_NAME || "Sample App";
