@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
@@ -35,7 +33,6 @@ const serverURL = process.env.PARSE_SERVER_URL || `http://localhost:${PORT}/pars
 const databaseURI = process.env.PARSE_SERVER_DATABASE_URI || "mongodb://localhost:27017/parseServer?retryWrites=true&w=majority";
 const CLOUD_CODE_MAIN = process.env.PARSE_SERVER_CLOUD || path.join(__dirname, "cloud", "main.js");
 // Info
-const production = process.env.PARSE_SERVER_PRODUCTION || false;
 const appId = process.env.PARSE_SERVER_APPLICATION_ID || "myAppId";
 const javascriptKey = process.env.PARSE_SERVER_JAVASCRIPT_KEY || "myJavascriptKey";
 const user = process.env.PARSE_SERVER_USER || "myUser";
@@ -52,15 +49,11 @@ const apiParse = new ParseServer({
   liveQuery: {
     classNames: ["Test", "Movies"],
   },
-  websocketTimeout: 10 * 1000,
   appId,
-  production,
   javascriptKey,
   mountPath: "/parse",
   logLevel: "info",
   port: PORT,
-  user,
-  password,
   appName,
   fileKey,
   masterKey,
@@ -69,6 +62,9 @@ const apiParse = new ParseServer({
   clientKey,
   allowClientClassCreation: true,
   allowExpiredAuthDataToken: false,
+  encodeParseObjectInCloudFunction: true, // Future-proof
+  enableInsecureAuthAdapters: false, // Future-proof
+  pages: { enableRouter: false },
 });
 
 const dashboardParse = new ParseDashboard(
@@ -79,7 +75,6 @@ const dashboardParse = new ParseDashboard(
         appId: appId,
         masterKey: masterKey,
         appName: appName,
-        production: production,
       },
     ],
     users: [
