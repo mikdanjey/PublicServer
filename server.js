@@ -1,107 +1,83 @@
-"use strict";
-
-const path = require('path');
-const express = require('express');
+const path = require("path");
+const express = require("express");
 const cors = require("cors");
-const dotenv = require('dotenv');
-const ParseServer = require('parse-server').ParseServer;
-const ParseDashboard = require('parse-dashboard');
+const dotenv = require("dotenv");
+const ParseServer = require("parse-server").ParseServer;
+const ParseDashboard = require("parse-dashboard");
 
 dotenv.config();
 const app = express();
-const whitelist = ['http://localhost:5001'];
+const whitelist = ["http://localhost:3000"];
 
 const corsOptionsDelegate = (req, callback) => {
-  let corsOptions;
-  if (whitelist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true, credentials: true, optionsSuccessStatus: 200 }
-  } else {
-    corsOptions = { origin: false, credentials: false, }
-  }
-  corsOptions = { origin: true, credentials: true, optionsSuccessStatus: 200 } // TODO: Temp
+  const isAllowed = whitelist.includes(req.header("Origin"));
+  const corsOptions = isAllowed ? { origin: true, credentials: true, optionsSuccessStatus: 200 } : { origin: false, credentials: false };
+
   callback(null, corsOptions);
-}
+};
 
 app.use(cors(corsOptionsDelegate));
 
-// local variables
-const NODE_ENV = process.env.NODE_ENV || "development";
+// Local Variables
 const PORT = process.env.NODE_PORT || 1337;
 const serverURL = process.env.PARSE_SERVER_URL || `http://localhost:${PORT}/parse`;
-const databaseURI = process.env.PARSE_SERVER_DATABASE_URI || "mongodb://localhost:27017/parseServer?retryWrites=true&w=majority";
-const CLOUD_CODE_MAIN = process.env.PARSE_SERVER_CLOUD || path.join(__dirname, 'cloud', 'main.js');
-// Info
-const production = process.env.PARSE_SERVER_PRODUCTION || false;
-const appId = process.env.PARSE_SERVER_APPLICATION_ID || "myAppId";
-const javascriptKey = process.env.PARSE_SERVER_JAVASCRIPT_KEY || "myJavascriptKey";
-const user = process.env.PARSE_SERVER_USER || "myUser";
-const password = process.env.PARSE_SERVER_PASSWORD || "myPassword";
-const appName = process.env.PARSE_SERVER_APP_NAME || "Sample App";
-const fileKey = process.env.PARSE_SERVER_FILE_KEY || "myFileKey";
-const masterKey = process.env.PARSE_SERVER_MASTER_KEY || "myMasterKey";
-const clientKey = process.env.PARSE_SERVER_CLIENT_KEY || "myClientKey";
+const databaseURI = process.env.PARSE_SERVER_DATABASE_URI;
+const CLOUD_CODE_MAIN = process.env.PARSE_SERVER_CLOUD || path.join(__dirname, "cloud", "main.js");
 
-// Config
+// Parse Config
 const apiParse = new ParseServer({
   databaseURI,
   cloud: CLOUD_CODE_MAIN,
-  liveQuery: {
-    classNames: ['Test', 'Movies',]
-  },
-  websocketTimeout: 10 * 1000,
-  appId,
-  production,
-  javascriptKey,
-  mountPath: '/parse',
-  logLevel: 'info',
-  port: PORT,
-  user,
-  password,
-  appName,
-  fileKey,
-  masterKey,
+  liveQuery: { classNames: ["Test"] },
+  appId: process.env.PARSE_SERVER_APPLICATION_ID,
+  javascriptKey: process.env.PARSE_SERVER_JAVASCRIPT_KEY,
+  masterKey: process.env.PARSE_SERVER_MASTER_KEY,
+  clientKey: process.env.PARSE_SERVER_CLIENT_KEY,
+  fileKey: process.env.PARSE_SERVER_FILE_KEY,
+  appName: process.env.PARSE_SERVER_APP_NAME,
   serverURL,
-  silent: false,
-  clientKey,
+  mountPath: "/parse",
   allowClientClassCreation: true,
   allowExpiredAuthDataToken: false,
+  encodeParseObjectInCloudFunction: true, // Future-proof
+  enableInsecureAuthAdapters: false, // Future-proof
+  logLevel: "info",
+  silent: false,
 });
 
-const dashboardParse = new ParseDashboard({
-  "apps": [
-    {
-      "serverURL": serverURL,
-      "appId": appId,
-      "masterKey": masterKey,
-      "appName": appName,
-      "production": production
-    },
-  ],
-  "users": [
-    {
-      "user": user,
-      "pass": password,
-      "apps": [{ "appId": appId }]
-    },
-    {
-      "user": "user",
-      "pass": "user",
-      "readOnly": true,
-      "mfa": "lmvmOIZGMTQklhOIhveqkumss",
-    }
-  ],
-  "useEncryptedPasswords": false,
-  "trustProxy": 1,
-}, { allowInsecureHTTP: true });
+// Parse Dashboard Config
+const dashboardParse = new ParseDashboard(
+  {
+    apps: [
+      {
+        serverURL,
+        appId: process.env.PARSE_SERVER_APPLICATION_ID,
+        masterKey: process.env.PARSE_SERVER_MASTER_KEY,
+        appName: process.env.PARSE_SERVER_APP_NAME,
+      },
+    ],
+    users: [
+      {
+        user: process.env.PARSE_SERVER_USER,
+        pass: process.env.PARSE_SERVER_PASSWORD,
+        apps: [{ appId: process.env.PARSE_SERVER_APPLICATION_ID }],
+      },
+    ],
+    useEncryptedPasswords: false,
+    trustProxy: 1,
+  },
+  { allowInsecureHTTP: true },
+);
 
-app.get('/', (req, res) => {
-  res.status(400).send("Not Found");
-});
+// Routes
+app.get("/", (req, res) => res.status(400).send("Not Found"));
 
-app.use('/parse', apiParse.app);
-app.use('/dashboard', dashboardParse);
+app.use("/parse", apiParse.app);
+app.use("/dashboard", dashboardParse);
 
+// Server Start
 app.listen(PORT, async () => {
   await apiParse.start();
   console.log(`REST API running on http://localhost:${PORT}/parse`);
+  console.log(`Dashboard available at http://localhost:${PORT}/dashboard`);
 });
