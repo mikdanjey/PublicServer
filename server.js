@@ -7,7 +7,7 @@ const ParseDashboard = require("parse-dashboard");
 
 dotenv.config();
 const app = express();
-const whitelist = ["http://localhost:5001"];
+const whitelist = ["http://localhost:3000"];
 
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
@@ -27,27 +27,26 @@ const corsOptionsDelegate = (req, callback) => {
 app.use(cors(corsOptionsDelegate));
 
 // local variables
-const NODE_ENV = process.env.NODE_ENV || "development";
 const PORT = process.env.NODE_PORT || 1337;
 const serverURL = process.env.PARSE_SERVER_URL || `http://localhost:${PORT}/parse`;
-const databaseURI = process.env.PARSE_SERVER_DATABASE_URI || "mongodb://localhost:27017/parseServer?retryWrites=true&w=majority";
+const databaseURI = process.env.PARSE_SERVER_DATABASE_URI;
 const CLOUD_CODE_MAIN = process.env.PARSE_SERVER_CLOUD || path.join(__dirname, "cloud", "main.js");
 // Info
-const appId = process.env.PARSE_SERVER_APPLICATION_ID || "myAppId";
-const javascriptKey = process.env.PARSE_SERVER_JAVASCRIPT_KEY || "myJavascriptKey";
-const user = process.env.PARSE_SERVER_USER || "myUser";
-const password = process.env.PARSE_SERVER_PASSWORD || "myPassword";
-const appName = process.env.PARSE_SERVER_APP_NAME || "Sample App";
-const fileKey = process.env.PARSE_SERVER_FILE_KEY || "myFileKey";
-const masterKey = process.env.PARSE_SERVER_MASTER_KEY || "myMasterKey";
-const clientKey = process.env.PARSE_SERVER_CLIENT_KEY || "myClientKey";
+const appId = process.env.PARSE_SERVER_APPLICATION_ID;
+const masterKey = process.env.PARSE_SERVER_MASTER_KEY;
+const javascriptKey = process.env.PARSE_SERVER_JAVASCRIPT_KEY;
+const clientKey = process.env.PARSE_SERVER_CLIENT_KEY;
+const fileKey = process.env.PARSE_SERVER_FILE_KEY;
+const appName = process.env.PARSE_SERVER_APP_NAME;
+const user = process.env.PARSE_SERVER_USER;
+const password = process.env.PARSE_SERVER_PASSWORD;
 
 // Config
 const apiParse = new ParseServer({
   databaseURI,
   cloud: CLOUD_CODE_MAIN,
   liveQuery: {
-    classNames: ["Test", "Movies"],
+    classNames: ["Test"],
   },
   appId,
   javascriptKey,
