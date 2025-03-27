@@ -63,10 +63,10 @@ const dashboardParse = new ParseDashboard(
         apps: [{ appId: process.env.PARSE_SERVER_APPLICATION_ID }],
       },
     ],
-    useEncryptedPasswords: false,
+    useEncryptedPasswords: true,
     trustProxy: 1,
   },
-  { allowInsecureHTTP: true },
+  { allowInsecureHTTP: false },
 );
 
 // Routes
