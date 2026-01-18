@@ -66,7 +66,7 @@ const dashboardParse = new ParseDashboard(
     useEncryptedPasswords: false,
     trustProxy: 1,
   },
-  { allowInsecureHTTP: true },
+  { allowInsecureHTTP: false },
 );
 
 // Routes
