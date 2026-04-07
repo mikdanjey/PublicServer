@@ -97,11 +97,26 @@ function buildParseConfig(env) {
     mountPath: "/parse",
     allowClientClassCreation: !isProduction,
     allowExpiredAuthDataToken: false,
-    encodeParseObjectInCloudFunction: true,
     enableInsecureAuthAdapters: false,
     logLevel: isProduction ? "error" : "info",
     silent: false,
     databaseOptions: { maxPoolSize: 10 },
+    // Silence deprecation warnings by setting future defaults explicitly
+    fileUpload: { allowedFileUrlDomains: [] },
+    pages: { encodePageParamHeaders: true },
+    readOnlyMasterKeyIps: ["127.0.0.1", "::1"],
+    requestComplexity: {
+      includeDepth: 10,
+      includeCount: 100,
+      subqueryDepth: 10,
+      queryDepth: 10,
+      graphQLDepth: 20,
+      graphQLFields: 200,
+      batchRequestLimit: 100,
+    },
+    protectedFieldsOwnerExempt: false,
+    protectedFieldsTriggerExempt: true,
+    protectedFieldsSaveResponseExempt: false,
   };
 }
 
