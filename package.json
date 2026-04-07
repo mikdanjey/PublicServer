@@ -11,6 +11,7 @@
     "dev": "nodemon server.js",
     "client": "node client.js",
     "prettier:check": "prettier . --check",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock",
     "format": "prettier . --write"
   },
   "keywords": [
@@ -19,16 +20,16 @@
     "api"
   ],
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "parse-dashboard": "^6.2.0",
-    "parse-server": "^8.0.2"
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "parse-dashboard": "^9.1.1",
+    "parse-server": "^9.7.0"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7",
-    "nodemon": "^3.1.9",
-    "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.4.2",
+    "dotenv": "^17.4.1",
+    "nodemon": "^3.1.14",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1",
     "prettier-plugin-import-sort": "^0.0.7"
   },
   "lint-staged": {
