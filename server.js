@@ -132,6 +132,7 @@ function buildDashboardConfig(env) {
         appId: env.PARSE_SERVER_APPLICATION_ID,
         masterKey: env.PARSE_SERVER_MASTER_KEY,
         appName: env.PARSE_SERVER_APP_NAME,
+        serverInfo: { serverURL },
       },
     ],
     users: [
