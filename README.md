@@ -1,7 +1,7 @@
 # My Parse Server
 
 - `yarn install`
-- `cp .env.sample-dev .env`
+- `cp .env.example .env`
 - `yarn start`
 - `yarn now`
 
