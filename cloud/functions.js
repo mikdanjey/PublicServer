@@ -1,3 +1,20 @@
+// Minimal structured logger — same JSON-line format as server.js
+const logger = {
+  _write(level, message) {
+    const line = JSON.stringify({ timestamp: new Date().toISOString(), level, message: String(message) });
+    process.stdout.write(line + "\n");
+  },
+  info(message) {
+    this._write("info", message);
+  },
+  warn(message) {
+    this._write("warn", message);
+  },
+  error(message) {
+    this._write("error", message);
+  },
+};
+
 Parse.Cloud.beforeLogin(async request => {
   const { object: user } = request;
   user.set("isOnline", true);
@@ -5,10 +22,14 @@ Parse.Cloud.beforeLogin(async request => {
 });
 
 Parse.Cloud.afterLogout(async request => {
-  const { object: session } = request;
-  const user = session.get("user");
-  await user.set("isOnline", false);
-  user.save(null, { useMasterKey: true });
+  try {
+    const { object: session } = request;
+    const user = session.get("user");
+    user.set("isOnline", false);
+    await user.save(null, { useMasterKey: true });
+  } catch (err) {
+    logger.error(`afterLogout error: ${err.message}`);
+  }
 });
 
 Parse.Cloud.define("hello", async req => {
@@ -28,10 +49,10 @@ Parse.Cloud.define("hello", async req => {
     { useMasterKey: true },
   ).then(
     function () {
-      console.log("Sent");
+      logger.info("Sent");
     },
     function (error) {
-      console.log("error, error");
+      logger.error(`Push error: ${error}`);
     },
   );
   return "Hi";
@@ -43,15 +64,25 @@ const sleeper = async seconds => {
 
 Parse.Cloud.job("myJob", async request => {
   const { params, headers, log, message } = request;
-  const text = await Parse.Cloud.httpRequest({ url: "https://example.com" });
-  message(text);
+  try {
+    const text = await Parse.Cloud.httpRequest({ url: "https://example.com" });
+    message(text);
+  } catch (err) {
+    logger.error(`myJob error: ${err.message}`);
+    message(err.message);
+  }
 });
 
 Parse.Cloud.job("my2Job", async request => {
   const { message } = request;
-  const params = { movie: "The Matrix" };
-  const data = await Parse.Cloud.run("asyncFunction", params);
-  message(data);
+  try {
+    const params = { movie: "The Matrix" };
+    const data = await Parse.Cloud.run("asyncFunction", params);
+    message(data);
+  } catch (err) {
+    logger.error(`my2Job error: ${err.message}`);
+    message(err.message);
+  }
 });
 
 Parse.Cloud.define("asyncFunction", async req => {
